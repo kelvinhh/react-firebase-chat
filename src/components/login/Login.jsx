@@ -53,7 +53,7 @@ const Login = () => {
         try {
             const res = await createUserWithEmailAndPassword(auth, email, password);
 
-            const imgUrl = "";
+            let imgUrl = "";
             if (avatar.file) {
                 imgUrl = await upload(avatar.file);
             }
