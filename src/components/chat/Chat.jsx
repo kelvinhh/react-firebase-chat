@@ -102,6 +102,10 @@ const Chat = () => {
     setText("");
   }
 
+  const messagTime = (msgCreatedAt) => {
+    return Date.now() - msgCreatedAt < 60000 ? "Just now" : new Date(msgCreatedAt).toLocaleTimeString();
+  };
+
   return (
     <div className="chat">
       <div className="top">
@@ -124,7 +128,7 @@ const Chat = () => {
             <div className="texts">
               {message.img && <img src={message.img} alt="" />}
               <p>{message.text}</p>
-              {/* <span>1 min ago</span> */}
+              <span>{messagTime(message.createdAt.toDate().getTime())}</span>
             </div>
           </div>
         ))}
