@@ -9,7 +9,6 @@ const AudioRecorder = ({ onSendAudio }) => {
         const mediaRecorderRef = useRef(null);
         const audioChunksRef = useRef([]);
 
-        const [audioUrl, setAudioUrl] = useState("");
         const [isRecording, setIsRecording] = useState(false);
 
         useEffect(() => {
@@ -40,7 +39,6 @@ const AudioRecorder = ({ onSendAudio }) => {
                         mediaRecorderRef.current.onstop = () => {
                             const audioBlob = new Blob(audioChunksRef.current, {type: 'audio/wav'});
                             const url = URL.createObjectURL(audioBlob);
-                            setAudioUrl(url);
                             onSendAudio(url);
                             audioChunksRef.current = [];
                         };
@@ -74,7 +72,6 @@ const AudioRecorder = ({ onSendAudio }) => {
                 <button onClick={() => handleClick()}>
                     <img src="./mic.png" alt=""/>
                 </button>
-                {/*{audioUrl && <audio src={audioUrl} controls/>}*/}
             </div>
         );
     }
