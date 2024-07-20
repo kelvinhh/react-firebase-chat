@@ -1,8 +1,6 @@
 import "./audioRecorder.css"
 import { useEffect, useRef, useState } from "react";
 
-// const audioURL = "Coldplay - Yellow (Official Video).mp3";
-
 const AudioRecorder = ({ onSendAudio }) => {
         const audioContextRef = useRef(null);
         const sourceRef = useRef(null);
@@ -28,7 +26,6 @@ const AudioRecorder = ({ onSendAudio }) => {
 
                         audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
                         sourceRef.curent = new MediaStreamAudioSourceNode(audioContextRef.current, options);
-                        // sourceRef.curent.connect(audioContextRef.current.destination);
 
                         mediaRecorderRef.current = new MediaRecorder(stream);
                         mediaRecorderRef.current.ondataavailable = (event) => {
@@ -39,8 +36,8 @@ const AudioRecorder = ({ onSendAudio }) => {
                         mediaRecorderRef.current.onstop = () => {
                             const audioBlob = new Blob(audioChunksRef.current, {type: 'audio/wav'});
                             const url = URL.createObjectURL(audioBlob);
-                            onSendAudio(url);
                             audioChunksRef.current = [];
+                            onSendAudio(url);
                         };
                     })
                     .catch((err) => {
@@ -50,7 +47,7 @@ const AudioRecorder = ({ onSendAudio }) => {
                 console.log("new getUserMedia not supported on your browser!");
             }
 
-        }, []);
+        }, [onSendAudio]);
 
         const handleClick = () => {
             setIsRecording(!isRecording);
@@ -69,7 +66,7 @@ const AudioRecorder = ({ onSendAudio }) => {
 
         return (
             <div className="audiorecorder">
-                <button onClick={() => handleClick()}>
+                <button onClick={handleClick}>
                     <img src="./mic.png" alt=""/>
                 </button>
             </div>
