@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 // const audioURL = "Coldplay - Yellow (Official Video).mp3";
 
-const AudioRecorder = () => {
+const AudioRecorder = ({ onSendAudio }) => {
         const audioContextRef = useRef(null);
         const sourceRef = useRef(null);
         const mediaRecorderRef = useRef(null);
@@ -41,6 +41,7 @@ const AudioRecorder = () => {
                             const audioBlob = new Blob(audioChunksRef.current, {type: 'audio/wav'});
                             const url = URL.createObjectURL(audioBlob);
                             setAudioUrl(url);
+                            onSendAudio(url);
                             audioChunksRef.current = [];
                         };
                     })
@@ -54,18 +55,14 @@ const AudioRecorder = () => {
         }, []);
 
         const handleClick = () => {
+            setIsRecording(!isRecording);
+            console.log(isRecording);
             try {
-                setIsRecording(!isRecording);
-                console.log(isRecording);
-                try {
-                    if (isRecording) {
-                        mediaRecorderRef.current.stop();
-                    } else {
-                        audioChunksRef.current = []; // Reset the chunks before starting a new recording
-                        mediaRecorderRef.current.start();
-                    }
-                } catch (error) {
-                    console.log(error);
+                if (isRecording) {
+                    mediaRecorderRef.current.stop();
+                } else {
+                    audioChunksRef.current = []; // Reset the chunks before starting a new recording
+                    mediaRecorderRef.current.start();
                 }
             } catch (error) {
                 console.log(error);
@@ -77,8 +74,7 @@ const AudioRecorder = () => {
                 <button onClick={() => handleClick()}>
                     <img src="./mic.png" alt=""/>
                 </button>
-                {audioUrl && <audio src={audioUrl} controls/>}
-                {/*<audio ref={audioRef} src={audioURL}/>*/}
+                {/*{audioUrl && <audio src={audioUrl} controls/>}*/}
             </div>
         );
     }
