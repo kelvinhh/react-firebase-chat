@@ -67,6 +67,7 @@
             max-width: 70%;
             display: flex;
             gap: 20px;
+            align-self: flex-start;
 
             &.own {
                 align-self: flex-end;
@@ -111,7 +112,7 @@
         }
     }
 
-    .bottom {
+    .button {
         padding: 20px;
         display: flex;
         align-items: center;

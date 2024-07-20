@@ -6,6 +6,7 @@ import { db } from "../../lib/firebase";
 import useChatStore from "../../lib/chatStore";
 import useUserStore from "../../lib/userStore";
 import upload from "../../lib/upload";
+import AudioRecorder from "./audioRecorder/AudioRecorder";
 
 const Chat = () => {
   const [chat, setChat] = useState();
@@ -106,6 +107,11 @@ const Chat = () => {
     return Date.now() - msgCreatedAt < 60000 ? "Just now" : new Date(msgCreatedAt).toLocaleTimeString();
   };
 
+  const startRecording = async() => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+  };
+
   return (
     <div className="chat">
       <div className="top">
@@ -134,14 +140,15 @@ const Chat = () => {
         ))}
         <div ref={endRef}></div>
       </div>
-      <div className="bottom">
+      <div className="button">
         <div className="icons">
           <label htmlFor="file">
             <img src="./img.png" alt="" />
           </label>
           <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
           <img src="./camera.png" alt="" />
-          <img src="./mic.png" alt="" />
+          {/*<img src="./mic.png" alt="" />*/}
+          <AudioRecorder />
         </div>
         <input type="text" placeholder="Type something..." onChange={e => setText(e.target.value)} value={text} disabled={isCurrentBlocked || isReceiverBlocked} />
         <div className="emoji">
