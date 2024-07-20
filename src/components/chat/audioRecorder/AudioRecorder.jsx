@@ -37,7 +37,7 @@ const AudioRecorder = ({ onSendAudio }) => {
                             const audioBlob = new Blob(audioChunksRef.current, {type: 'audio/wav'});
                             const url = URL.createObjectURL(audioBlob);
                             audioChunksRef.current = [];
-                            onSendAudio(url);
+                            onSendAudio(audioBlob);
                         };
                     })
                     .catch((err) => {

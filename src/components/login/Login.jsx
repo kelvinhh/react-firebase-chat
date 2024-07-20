@@ -3,7 +3,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../lib/firebase";
-import upload from "../../lib/upload";
+import { uploadImg } from "../../lib/upload";
 import { doc, setDoc } from "firebase/firestore";
 
 const Login = () => {
@@ -55,7 +55,7 @@ const Login = () => {
 
             let imgUrl = "";
             if (avatar.file) {
-                imgUrl = await upload(avatar.file);
+                imgUrl = await uploadImg(avatar.file);
             }
 
             await setDoc(doc(db, "users", res.user.uid), {

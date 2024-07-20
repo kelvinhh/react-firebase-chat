@@ -5,8 +5,8 @@ import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from "firebase/firesto
 import { db } from "../../lib/firebase";
 import useChatStore from "../../lib/chatStore";
 import useUserStore from "../../lib/userStore";
-import upload from "../../lib/upload";
-// import AudioRecorder from "./audioRecorder/AudioRecorder";
+import { uploadImg, uploadAudio } from "../../lib/upload";
+import AudioRecorder from "./audioRecorder/AudioRecorder";
 
 const Chat = () => {
     const [chat, setChat] = useState();
@@ -58,7 +58,7 @@ const Chat = () => {
         try {
 
             if (img.file) {
-                imgUrl = await upload(img.file);
+                imgUrl = await uploadImg(img.file);
             }
 
             await updateDoc(doc(db, "chats", chatId), {
@@ -107,17 +107,20 @@ const Chat = () => {
         return Date.now() - msgCreatedAt < 60000 ? "Just now" : new Date(msgCreatedAt).toLocaleTimeString();
     };
 
-    // const handleSendAudio = async (audioUrl) => {
-    //     console.log(audioUrl);
-    //     await updateDoc(doc(db, "chats", chatId), {
-    //         messages: arrayUnion({
-    //             senderId: currentUser.id,
-    //             text,
-    //             createdAt: new Date(),
-    //             audioUrl: audioUrl,
-    //         })
-    //     });
-    // };
+    const handleSendAudio = async (audioBlob) => {
+
+        const audioUrl = await uploadAudio(audioBlob);
+        console.log(audioUrl);
+
+        await updateDoc(doc(db, "chats", chatId), {
+            messages: arrayUnion({
+                senderId: currentUser.id,
+                text,
+                createdAt: new Date(),
+                audioUrl: audioUrl,
+            })
+        });
+    };
 
     return (
         <div className="chat">
@@ -142,7 +145,11 @@ const Chat = () => {
                         <div className="texts">
                             {message.img && <img src={message.img} alt=""/>}
                             {message.text && <p>{message.text}</p>}
-                            {(!message.img && !message.text) && <p>Drop</p>}
+                            {/*{(!message.img && !message.text) && <p>Drop</p>}*/}
+                            {message.audioUrl && (
+                                <audio controls src={message.audioUrl}>
+                                    Your browser does not support the audio element.
+                                </audio>)}
                             <span>{messageTime(message.createdAt.toDate().getTime())}</span>
                         </div>
                     </div>
@@ -156,8 +163,8 @@ const Chat = () => {
                     </label>
                     <input type="file" id="file" style={{display: "none"}} onChange={handleImg}/>
                     <img src="./camera.png" alt=""/>
-                    <img src="./mic.png" alt=""/>
-                    {/*<AudioRecorder onSendAudio={handleSendAudio}/>*/}
+                    {/*<img src="./mic.png" alt=""/>*/}
+                    <AudioRecorder onSendAudio={handleSendAudio}/>
                 </div>
                 <input type="text" placeholder="Type something..." onChange={e => setText(e.target.value)} value={text}
                        disabled={isCurrentBlocked || isReceiverBlocked}/>
