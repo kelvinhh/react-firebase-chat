@@ -5,7 +5,7 @@ import "./detail.css"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 const Detail = () => {
-  const { chatId, user, isCurrentBlocked, isReceiverBlocked, changeChat, changeBlock } = useChatStore();
+  const { user, isCurrentBlocked, isReceiverBlocked, changeBlock } = useChatStore();
   const { currentUser } = useUserStore()
 
   const handleBlock = async () => {
@@ -33,34 +33,34 @@ const Detail = () => {
         <div className="option">
           <div className="title">
             <span>Char Settings</span>
-            <img src="./arrowUp.png" alt="" />
+            <img src="public/arrowUp.png" alt="" />
           </div>
         </div>
         <div className="option">
           <div className="title">
             <span>Privacy & help</span>
-            <img src="./arrowUp.png" alt="" />
+            <img src="public/arrowUp.png" alt="" />
           </div>
         </div>
         <div className="option">
           <div className="title">
             <span>Shared photo</span>
-            <img src="./arrowDown.png" alt="" />
+            <img src="public/arrowDown.png" alt="" />
           </div>
           <div className="photos">
             <div className="photoItem">
               <div className="photoDetail">
-                <img src="./avatar.png" alt="" />
+                <img src="public/avatar.png" alt="" />
                 <span>photo_2024_2.png</span>
               </div>
-              <img src="./download.png" alt="" />
+              <img src="public/download.png" alt="" />
             </div>
           </div>
         </div>
         <div className="option">
           <div className="title">
             <span>Shared Files</span>
-            <img src="./arrowUp.png" alt="" />
+            <img src="public/arrowUp.png" alt="" />
           </div>
         </div>
         <button onClick={handleBlock}>{isCurrentBlocked ? "You are blocked" : isReceiverBlocked ? "User blocked" : "Blocked User"}</button>

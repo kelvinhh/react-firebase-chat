@@ -87,7 +87,7 @@ const Chat = () => {
           await updateDoc(userChatsRef, {
             chats: userChatsData.chats,
           });
-        };
+        }
       });
 
     } catch (error) {
@@ -102,7 +102,7 @@ const Chat = () => {
     setText("");
   }
 
-  const messagTime = (msgCreatedAt) => {
+  const messageTime = (msgCreatedAt) => {
     return Date.now() - msgCreatedAt < 60000 ? "Just now" : new Date(msgCreatedAt).toLocaleTimeString();
   };
 
@@ -117,9 +117,9 @@ const Chat = () => {
           </div>
         </div>
         <div className="icons">
-          <img src="./phone.png" alt="" />
-          <img src="./video.png" alt="" />
-          <img src="./info.png" alt="" />
+          <img src="public/phone.png" alt="" />
+          <img src="public/video.png" alt="" />
+          <img src="public/info.png" alt="" />
         </div>
       </div>
       <div className="center">
@@ -128,7 +128,7 @@ const Chat = () => {
             <div className="texts">
               {message.img && <img src={message.img} alt="" />}
               <p>{message.text}</p>
-              <span>{messagTime(message.createdAt.toDate().getTime())}</span>
+              <span>{messageTime(message.createdAt.toDate().getTime())}</span>
             </div>
           </div>
         ))}
@@ -137,15 +137,15 @@ const Chat = () => {
       <div className="bottom">
         <div className="icons">
           <label htmlFor="file">
-            <img src="./img.png" alt="" />
+            <img src="public/img.png" alt="" />
           </label>
           <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
-          <img src="./camera.png" alt="" />
-          <img src="./mic.png" alt="" />
+          <img src="public/camera.png" alt="" />
+          <img src="public/mic.png" alt="" />
         </div>
         <input type="text" placeholder="Type something..." onChange={e => setText(e.target.value)} value={text} disabled={isCurrentBlocked || isReceiverBlocked} />
         <div className="emoji">
-          <img src="./emoji.png" alt="" onClick={() => setOpen((prev) => !prev)} />
+          <img src="public/emoji.png" alt="" onClick={() => setOpen((prev) => !prev)} />
           <div className="picker">
             <EmojiPicker open={open} onEmojiClick={handleEmoji} />
           </div>
