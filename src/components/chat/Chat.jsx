@@ -117,9 +117,9 @@ const Chat = () => {
           </div>
         </div>
         <div className="icons">
-          <img src="public/phone.png" alt="" />
-          <img src="public/video.png" alt="" />
-          <img src="public/info.png" alt="" />
+          <img src="./phone.png" alt="" />
+          <img src="./video.png" alt="" />
+          <img src="./info.png" alt="" />
         </div>
       </div>
       <div className="center">
@@ -137,15 +137,15 @@ const Chat = () => {
       <div className="bottom">
         <div className="icons">
           <label htmlFor="file">
-            <img src="public/img.png" alt="" />
+            <img src="./img.png" alt="" />
           </label>
           <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
-          <img src="public/camera.png" alt="" />
-          <img src="public/mic.png" alt="" />
+          <img src="./camera.png" alt="" />
+          <img src="./mic.png" alt="" />
         </div>
         <input type="text" placeholder="Type something..." onChange={e => setText(e.target.value)} value={text} disabled={isCurrentBlocked || isReceiverBlocked} />
         <div className="emoji">
-          <img src="public/emoji.png" alt="" onClick={() => setOpen((prev) => !prev)} />
+          <img src="./emoji.png" alt="" onClick={() => setOpen((prev) => !prev)} />
           <div className="picker">
             <EmojiPicker open={open} onEmojiClick={handleEmoji} />
           </div>

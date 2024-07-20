@@ -33,34 +33,34 @@ const Detail = () => {
         <div className="option">
           <div className="title">
             <span>Char Settings</span>
-            <img src="public/arrowUp.png" alt="" />
+            <img src="./arrowUp.png" alt="" />
           </div>
         </div>
         <div className="option">
           <div className="title">
             <span>Privacy & help</span>
-            <img src="public/arrowUp.png" alt="" />
+            <img src="./arrowUp.png" alt="" />
           </div>
         </div>
         <div className="option">
           <div className="title">
             <span>Shared photo</span>
-            <img src="public/arrowDown.png" alt="" />
+            <img src="./arrowDown.png" alt="" />
           </div>
           <div className="photos">
             <div className="photoItem">
               <div className="photoDetail">
-                <img src="public/avatar.png" alt="" />
+                <img src="./avatar.png" alt="" />
                 <span>photo_2024_2.png</span>
               </div>
-              <img src="public/download.png" alt="" />
+              <img src="./download.png" alt="" />
             </div>
           </div>
         </div>
         <div className="option">
           <div className="title">
             <span>Shared Files</span>
-            <img src="public/arrowUp.png" alt="" />
+            <img src="./arrowUp.png" alt="" />
           </div>
         </div>
         <button onClick={handleBlock}>{isCurrentBlocked ? "You are blocked" : isReceiverBlocked ? "User blocked" : "Blocked User"}</button>
