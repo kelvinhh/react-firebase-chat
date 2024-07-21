@@ -14,4 +14,4 @@ I have deployed it on vercel, you can try the app here: https://react-firebase-c
 - **User Registration and Login**: Users can create new accounts using email and password, and use them to log in.
 - **User Interface Design**: Friendly and intuitive UI design.
 - **Add Friends**: Users can add friends by searching for usernames.
-- **Real-time Chat**: Supports real-time text messaging.
+- **Real-time Chat**: Supports real-time text, audio messaging.
