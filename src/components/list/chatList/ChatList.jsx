@@ -1,6 +1,6 @@
 import "./chatList.css"
 import AddUser from "./addUser/AddUser";
-import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc, collection, deleteDoc } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 import { useEffect, useState } from "react";
 import useUserStore from "../../../lib/userStore";
@@ -62,9 +62,42 @@ const ChatList = () => {
 
     };
 
-    const handleDelete = (chat) => {
-        console.log(chat);
+    const handleDelete = async (chat) => {
+        try {
+            // Delete document from 'chats' collection
+            const chatRef = doc(db, "chats", chat.chatId);
+            await deleteDoc(chatRef);
 
+            // Delete field for each user in 'userchats'
+            const userChatsRef = collection(db, "userchats");
+            const userChatsDoc = await getDoc(doc(userChatsRef, chat.user.id));
+            const currentUserChatsDoc = await getDoc(doc(userChatsRef, currentUser.id));
+
+            if (userChatsDoc.exists() && currentUserChatsDoc.exists()) {
+                const userChats = userChatsDoc.data().chats || [];
+                const currentUserChats = currentUserChatsDoc.data().chats || [];
+
+                // Find and remove the chat for the user
+                let i = userChats.findIndex((item) => item.receiverId === currentUser.id);
+                if (i !== -1) {
+                    userChats.splice(i, 1);
+                    await updateDoc(doc(userChatsRef, chat.user.id), {
+                        chats: userChats,
+                    });
+                }
+
+                // Find and remove the chat for the current user
+                let j = currentUserChats.findIndex((item) => item.receiverId === chat.user.id);
+                if (j !== -1) {
+                    currentUserChats.splice(j, 1);
+                    await updateDoc(doc(userChatsRef, currentUser.id), {
+                        chats: currentUserChats,
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Error deleting chat:", error);
+        }
     };
 
     const filterChats = chats.filter((chat) => chat.user.username.toLowerCase().includes(input.toLowerCase()));
