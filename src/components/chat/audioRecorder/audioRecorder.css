@@ -6,10 +6,19 @@
         cursor: pointer; /* Change cursor to pointer on hover */
         display: inline-block; /* Ensure button wraps the image tightly */
 
+        &:disabled {
+            cursor: not-allowed;
+        }
+
+        &:disabled img {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         img {
             width: 20px;
             height: 20px;
-            cursor: pointer;
+
         }
     }
 }

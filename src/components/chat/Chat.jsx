@@ -21,6 +21,7 @@ const Chat = () => {
     const {currentUser} = useUserStore();
 
     const endRef = useRef(null);
+    const isDisabled = (isCurrentBlocked || isReceiverBlocked);
 
     useEffect(() => {
         endRef.current?.scrollIntoView({behavior: "smooth"});
@@ -158,24 +159,27 @@ const Chat = () => {
             </div>
             <div className="button">
                 <div className="icons">
-                    <label htmlFor="file">
+                    <label htmlFor="file" className={isDisabled ? 'disabled' : ''}>
                         <img src="./img.png" alt=""/>
                     </label>
-                    <input type="file" id="file" style={{display: "none"}} onChange={handleImg}/>
+                    <input type="file" id="file" style={{display: "none"}} onChange={handleImg}
+                           disabled={isCurrentBlocked || isReceiverBlocked}/>
                     <img src="./camera.png" alt=""/>
                     {/*<img src="./mic.png" alt=""/>*/}
-                    <AudioRecorder onSendAudio={handleSendAudio}/>
+                    <AudioRecorder onSendAudio={handleSendAudio} disabled={isDisabled}/>
                 </div>
                 <input type="text" placeholder="Type something..." onChange={e => setText(e.target.value)} value={text}
-                       disabled={isCurrentBlocked || isReceiverBlocked}/>
-                <div className="emoji">
-                    <img src="./emoji.png" alt="" onClick={() => setOpen((prev) => !prev)}/>
-                    <div className="picker">
-                        <EmojiPicker open={open} onEmojiClick={handleEmoji}/>
+                       disabled={isDisabled}/>
+                {!isDisabled &&
+                    <div className="emoji">
+                        <img src="./emoji.png" alt="" onClick={() => setOpen((prev) => !prev)}/>
+                        <div className="picker">
+                            <EmojiPicker open={open} onEmojiClick={handleEmoji}/>
+                        </div>
                     </div>
-                </div>
+                }
                 <button className="sendButton" onClick={handleSend}
-                        disabled={isCurrentBlocked || isReceiverBlocked}>Send
+                        disabled={isDisabled}>Send
                 </button>
             </div>
         </div>
