@@ -52,7 +52,7 @@ const Chat = () => {
     };
 
     const handleSend = async () => {
-        if (text === "") return;
+        if (text === "" && !img.file) return;
 
         let imgUrl = "";
 
@@ -145,8 +145,7 @@ const Chat = () => {
                          key={message?.createdAt}>
                         <div className="texts">
                             {message.img && <img src={message.img} alt=""/>}
-                            {message.text && <p>{message.text}</p>}
-                            {/*{(!message.img && !message.text) && <p>Drop</p>}*/}
+                            {(message.text !== "") && <p>{message.text}</p>}
                             {message.audioUrl && (
                                 <audio controls src={message.audioUrl}>
                                     Your browser does not support the audio element.
