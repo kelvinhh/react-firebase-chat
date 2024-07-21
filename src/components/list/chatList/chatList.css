@@ -69,6 +69,22 @@
                 font-size: 14px;
                 font-weight: 300;
             }
+
+        }
+
+        button {
+            display: flex;
+            margin-left: auto;
+            padding: 10px 20px;
+            background-color: rgba(230, 74, 105, 0.553);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: rgba(220, 20, 60, 0.796);
+            }
         }
     }
 }
