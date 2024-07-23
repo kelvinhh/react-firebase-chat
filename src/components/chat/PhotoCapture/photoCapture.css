@@ -1,0 +1,24 @@
+.photocapture {
+    button {
+        background: none; /* Remove default button background */
+        border: none; /* Remove default button border */
+        padding: 0; /* Remove default button padding */
+        cursor: pointer; /* Change cursor to pointer on hover */
+        display: inline-block; /* Ensure button wraps the image tightly */
+
+        &:disabled {
+            cursor: not-allowed;
+        }
+
+        &:disabled img {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        img {
+            width: 20px;
+            height: 20px;
+
+        }
+    }
+}

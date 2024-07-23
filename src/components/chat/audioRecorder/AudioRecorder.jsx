@@ -1,7 +1,7 @@
 import "./audioRecorder.css";
 import {useRef, useState} from "react";
 
-const AudioRecorder = ({onSendAudio, disabled}) => {
+const AudioRecorder = ({onSendAudio, isDisabled}) => {
     const audioContextRef = useRef(null);
     const sourceRef = useRef(null);
     const mediaRecorderRef = useRef(null);
@@ -56,7 +56,7 @@ const AudioRecorder = ({onSendAudio, disabled}) => {
 
     return (
         <div className="audiorecorder">
-            <button onClick={handleClick} disabled={disabled}>
+            <button onClick={handleClick} disabled={isDisabled}>
                 <img src="./mic.png" alt="Mic"/>
             </button>
         </div>

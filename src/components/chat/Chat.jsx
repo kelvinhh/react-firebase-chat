@@ -5,9 +5,10 @@ import {arrayUnion, doc, getDoc, onSnapshot, updateDoc} from "firebase/firestore
 import {db} from "../../lib/firebase";
 import useChatStore from "../../lib/chatStore";
 import useUserStore from "../../lib/userStore";
-import {uploadAudio, uploadImg} from "../../lib/upload";
 import AudioRecorder from "./audioRecorder/AudioRecorder.jsx";
 import ReactPlayer from "react-player";
+import PhotoCapture from "./PhotoCapture/PhotoCapture.jsx";
+import {upload} from "../../lib/upload.js";
 
 const Chat = () => {
     const [ chat, setChat ] = useState();
@@ -60,7 +61,7 @@ const Chat = () => {
         try {
 
             if (img.file) {
-                imgUrl = await uploadImg(img.file);
+                imgUrl = await upload(img.file, "images");
             }
 
             await updateDoc(doc(db, "chats", chatId), {
@@ -111,7 +112,7 @@ const Chat = () => {
 
     const handleSendAudio = async (audioBlob) => {
 
-        const audioUrl = await uploadAudio(audioBlob);
+        const audioUrl = await upload(audioBlob, "audios");
         console.log(audioUrl);
 
         await updateDoc(doc(db, "chats", chatId), {
@@ -120,6 +121,20 @@ const Chat = () => {
                 text,
                 createdAt: new Date(),
                 audioUrl: audioUrl,
+            })
+        });
+    };
+
+    const handleSendPhoto = async (photo) => {
+        const photoUrl = await upload(photo, "photos");
+        console.log(photoUrl);
+
+        await updateDoc(doc(db, "chats", chatId), {
+            messages: arrayUnion({
+                senderId: currentUser.id,
+                text,
+                createdAt: new Date(),
+                photoUrl: photoUrl,
             })
         });
     };
@@ -150,6 +165,7 @@ const Chat = () => {
                             {message.audioUrl && (
                                 <ReactPlayer controls width="auto" height="80px" url={message.audioUrl}/>
                             )}
+                            {message.photoUrl && <img src={message.photoUrl}/>}
                             <span>{messageTime(message.createdAt.toDate().getTime())}</span>
                         </div>
                     </div>
@@ -163,8 +179,7 @@ const Chat = () => {
                     </label>
                     <input type="file" id="file" style={{display: "none"}} onChange={handleImg}
                            disabled={isCurrentBlocked || isReceiverBlocked}/>
-                    <img src="./camera.png" alt=""/>
-                    {/*<ARC chatId={chatId} currentUserId={currentUser.id} isDisabled={isDisabled}/>*/}
+                    <PhotoCapture onSendPhoto={handleSendPhoto} disabled={isDisabled}/>
                     <AudioRecorder onSendAudio={handleSendAudio} disabled={isDisabled}/>
                 </div>
                 <input type="text" placeholder="Type something..." onChange={e => setText(e.target.value)} value={text}
