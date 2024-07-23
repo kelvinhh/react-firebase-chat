@@ -1,18 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import {useEffect, useRef, useState} from "react";
 import "./chat.css"
 import EmojiPicker from "emoji-picker-react";
-import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
-import { db } from "../../lib/firebase";
+import {arrayUnion, doc, getDoc, onSnapshot, updateDoc} from "firebase/firestore";
+import {db} from "../../lib/firebase";
 import useChatStore from "../../lib/chatStore";
 import useUserStore from "../../lib/userStore";
-import { uploadImg, uploadAudio } from "../../lib/upload";
-import AudioRecorder from "./audioRecorder/AudioRecorder";
+import {uploadAudio, uploadImg} from "../../lib/upload";
+import AudioRecorder from "./audioRecorder/AudioRecorder.jsx";
+import ReactPlayer from "react-player";
 
 const Chat = () => {
-    const [chat, setChat] = useState();
-    const [open, setOpen] = useState(false);
-    const [text, setText] = useState("");
-    const [img, setImg] = useState({
+    const [ chat, setChat ] = useState();
+    const [ open, setOpen ] = useState(false);
+    const [ text, setText ] = useState("");
+    const [ img, setImg ] = useState({
         file: null,
         url: "",
     });
@@ -35,7 +36,7 @@ const Chat = () => {
         return () => {
             unSub();
         };
-    }, [chatId]);
+    }, [ chatId ]);
 
     const handleEmoji = (e) => {
         setText((prev) => prev + e.emoji);
@@ -71,7 +72,7 @@ const Chat = () => {
                 })
             });
 
-            const userIDs = [currentUser.id, user.id];
+            const userIDs = [ currentUser.id, user.id ];
 
             userIDs.forEach(async (id) => {
                 const userChatsRef = doc(db, "userchats", id);
@@ -147,9 +148,8 @@ const Chat = () => {
                             {message.img && <img src={message.img} alt=""/>}
                             {(message.text !== "") && <p>{message.text}</p>}
                             {message.audioUrl && (
-                                <audio controls src={message.audioUrl}>
-                                    Your browser does not support the audio element.
-                                </audio>)}
+                                <ReactPlayer controls width="auto" height="80px" url={message.audioUrl}/>
+                            )}
                             <span>{messageTime(message.createdAt.toDate().getTime())}</span>
                         </div>
                     </div>
@@ -164,7 +164,7 @@ const Chat = () => {
                     <input type="file" id="file" style={{display: "none"}} onChange={handleImg}
                            disabled={isCurrentBlocked || isReceiverBlocked}/>
                     <img src="./camera.png" alt=""/>
-                    {/*<img src="./mic.png" alt=""/>*/}
+                    {/*<ARC chatId={chatId} currentUserId={currentUser.id} isDisabled={isDisabled}/>*/}
                     <AudioRecorder onSendAudio={handleSendAudio} disabled={isDisabled}/>
                 </div>
                 <input type="text" placeholder="Type something..." onChange={e => setText(e.target.value)} value={text}

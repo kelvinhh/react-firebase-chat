@@ -1,77 +1,66 @@
-import "./audioRecorder.css"
-import { useEffect, useRef, useState } from "react";
+import "./audioRecorder.css";
+import {useRef, useState} from "react";
 
-const AudioRecorder = ({ onSendAudio, disabled }) => {
-        const audioContextRef = useRef(null);
-        const sourceRef = useRef(null);
-        const mediaRecorderRef = useRef(null);
-        const audioChunksRef = useRef([]);
+const AudioRecorder = ({onSendAudio, disabled}) => {
+    const audioContextRef = useRef(null);
+    const sourceRef = useRef(null);
+    const mediaRecorderRef = useRef(null);
+    const audioChunksRef = useRef([]);
+    const _stream = useRef(null);
 
-        const [isRecording, setIsRecording] = useState(false);
+    const [ isRecording, setIsRecording ] = useState(false);
 
-        useEffect(() => {
+    const handleClick = async () => {
+        if (isRecording) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        } else {
+            audioChunksRef.current = []; // Reset the chunks before starting a new recording
+            setIsRecording(true);
+
             if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices
-                    .getUserMedia(
-                        // constraints: audio and video for this app
-                        {
-                            audio: true,
-                            video: false,
-                        },
-                    )
-                    .then((stream) => {
-                        const options = {
-                            mediaStream: stream,
-                        };
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+                    _stream.current = stream;
 
-                        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-                        sourceRef.curent = new MediaStreamAudioSourceNode(audioContextRef.current, options);
+                    audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+                    sourceRef.current = audioContextRef.current.createMediaStreamSource(stream);
 
-                        mediaRecorderRef.current = new MediaRecorder(stream);
-                        mediaRecorderRef.current.ondataavailable = (event) => {
-                            if (event.data.size > 0) {
-                                audioChunksRef.current.push(event.data);
+                    mediaRecorderRef.current = new MediaRecorder(stream);
+                    mediaRecorderRef.current.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            audioChunksRef.current.push(event.data);
+                        }
+                    };
+                    mediaRecorderRef.current.onstop = () => {
+                        const audioBlob = new Blob(audioChunksRef.current, {type: 'audio/wav'});
+                        audioChunksRef.current = [];
+                        onSendAudio(audioBlob);
+                        _stream.current.getTracks().forEach((track) => {
+                            if (track.readyState === 'live' && track.kind === 'audio') {
+                                track.stop();
                             }
-                        };
-                        mediaRecorderRef.current.onstop = () => {
-                            const audioBlob = new Blob(audioChunksRef.current, {type: 'audio/wav'});
-                            const url = URL.createObjectURL(audioBlob);
-                            audioChunksRef.current = [];
-                            onSendAudio(audioBlob);
-                        };
-                    })
-                    .catch((err) => {
-                        console.error(`The following gUM error occurred: ${err}`);
-                    });
-            } else {
-                console.log("new getUserMedia not supported on your browser!");
-            }
+                        });
+                    };
 
-        }, [onSendAudio]);
-
-        const handleClick = () => {
-            setIsRecording(!isRecording);
-            console.log(isRecording);
-            try {
-                if (isRecording) {
-                    mediaRecorderRef.current.stop();
-                } else {
-                    audioChunksRef.current = []; // Reset the chunks before starting a new recording
                     mediaRecorderRef.current.start();
+                } catch (err) {
+                    console.error(`The following gUM error occurred: ${err}`);
+                    setIsRecording(false);
                 }
-            } catch (error) {
-                console.log(error);
+            } else {
+                console.log("getUserMedia not supported on your browser!");
             }
-        };
+        }
+    };
 
-        return (
-            <div className="audiorecorder">
-                <button onClick={handleClick} disabled={disabled}>
-                    <img src="./mic.png" alt="" />
-                </button>
-            </div>
-        );
-    }
-;
+    return (
+        <div className="audiorecorder">
+            <button onClick={handleClick} disabled={disabled}>
+                <img src="./mic.png" alt="Mic"/>
+            </button>
+        </div>
+    );
+};
 
 export default AudioRecorder;
