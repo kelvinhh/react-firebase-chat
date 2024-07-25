@@ -1,4 +1,4 @@
-.chat::-webkit-scrollbar {
+.chat .center::-webkit-scrollbar {
     display: none;
 }
 
