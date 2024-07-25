@@ -12,23 +12,22 @@ const UserInfo = () => {
     const [ status, setStatus ] = useState(currentUser.status || "");
 
     const handleMore = () => {
-        setShowInfo(prev => !prev);
+        return;
     };
 
     const handleEdit = async () => {
         if (edit) {
-            // Save the new info and status to Firestore
             const currentUserRef = doc(db, "users", currentUser.id);
             await updateDoc(currentUserRef, {
                 info: info,
                 status: status,
             });
-            console.log(info, status);
-
-            setEdit(false);
-        } else {
-            setEdit(true);
         }
+        setEdit(prev => !prev);
+    };
+
+    const closeModal = () => {
+        setEdit(false);
     };
 
     return (
@@ -48,19 +47,25 @@ const UserInfo = () => {
                 </div>
                 {showInfo && <div>Info: {info}</div>}
                 {edit && (
-                    <div className="info">
-                        <input
-                            type="text"
-                            value={info}
-                            onChange={(e) => setInfo(e.target.value)}
-                            placeholder="Info"
-                        />
-                        <input
-                            type="text"
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value)}
-                            placeholder="Status"
-                        />
+                    <div className="modal">
+                        <div className="modal-content">
+                            <button className="modal-close" onClick={closeModal}>
+                                &times;
+                            </button>
+                            <input
+                                type="text"
+                                value={info}
+                                onChange={(e) => setInfo(e.target.value)}
+                                placeholder="Info"
+                            />
+                            <input
+                                type="text"
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                placeholder="Status"
+                            />
+                            <button onClick={handleEdit}>Save</button>
+                        </div>
                     </div>
                 )}
             </div>

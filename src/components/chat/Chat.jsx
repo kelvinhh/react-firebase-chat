@@ -15,6 +15,7 @@ const Chat = () => {
     const [ chat, setChat ] = useState();
     const [ open, setOpen ] = useState(false);
     const [ text, setText ] = useState("");
+    const [ showInfo, setShowInfo ] = useState(false);
 
     const {chatId, user, isCurrentBlocked, isReceiverBlocked} = useChatStore();
     const {currentUser} = useUserStore();
@@ -134,6 +135,14 @@ const Chat = () => {
 
     };
 
+    const handleInfo = () => {
+        if (showInfo) {
+            setShowInfo(false);
+        } else {
+            setShowInfo(true);
+        }
+    };
+
     return (
         <div className="chat">
             <div className="top">
@@ -147,7 +156,10 @@ const Chat = () => {
                 <div className="icons">
                     <img src="./phone.png" alt=""/>
                     <img src="./video.png" alt=""/>
-                    <img src="./info.png" alt=""/>
+                    <div className="info-wrapper">
+                        <img src="./info.png" alt="" onClick={handleInfo}/>
+                        {showInfo && <p>Contact: {user?.email}</p>}
+                    </div>
                 </div>
             </div>
             <div className="center">

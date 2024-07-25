@@ -60,6 +60,29 @@
     height: 20px;
 }
 
+.chat .top .icons .info-wrapper {
+    position: relative;
+    display: inline-block;
+
+    img {
+        vertical-align: middle; /* Align image vertically in the middle */
+    }
+
+    p {
+        position: absolute;
+        top: 100%; /* Position below the image */
+        left: 0;
+        color: #07bc0c;
+        background-color: white; /* Background color for the info box */
+        border: 1px solid #ddd; /* Border to make it distinct */
+        border-radius: 5px; /* Rounded corners */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        padding: 10px; /* Padding inside the info box */
+        white-space: nowrap; /* Prevent text from wrapping */
+        z-index: 10; /* Ensure it appears above other content */
+    }
+}
+
 .chat .center {
     padding: 20px;
     flex: 1;
