@@ -6,18 +6,15 @@ import {db} from "../../lib/firebase";
 import useChatStore from "../../lib/chatStore";
 import useUserStore from "../../lib/userStore";
 import AudioRecorder from "./audioRecorder/AudioRecorder.jsx";
-import ReactPlayer from "react-player";
 import PhotoCapture from "./PhotoCapture/PhotoCapture.jsx";
+import ImageSender from "./imageSender/ImageSender.jsx";
+import ReactPlayer from "react-player";
 import {upload} from "../../lib/upload.js";
 
 const Chat = () => {
     const [ chat, setChat ] = useState();
     const [ open, setOpen ] = useState(false);
     const [ text, setText ] = useState("");
-    const [ img, setImg ] = useState({
-        file: null,
-        url: "",
-    });
 
     const {chatId, user, isCurrentBlocked, isReceiverBlocked} = useChatStore();
     const {currentUser} = useUserStore();
@@ -43,33 +40,16 @@ const Chat = () => {
         setText((prev) => prev + e.emoji);
     }
 
-    const handleImg = (e) => {
-        console.log(e);
-        if (e.target.files[0]) {
-            setImg({
-                file: e.target.files[0],
-                url: URL.createObjectURL(e.target.files[0])
-            });
-        }
-    };
-
     const handleSend = async () => {
-        if (text === "" && !img.file) return;
-
-        let imgUrl = "";
+        if (text === "") return;
 
         try {
-
-            if (img.file) {
-                imgUrl = await upload(img.file, "images");
-            }
 
             await updateDoc(doc(db, "chats", chatId), {
                 messages: arrayUnion({
                     senderId: currentUser.id,
                     text,
                     createdAt: new Date(),
-                    ...(imgUrl && {img: imgUrl}),
                 })
             });
 
@@ -97,11 +77,6 @@ const Chat = () => {
         } catch (error) {
             console.log(error);
         }
-
-        setImg({
-            file: null,
-            url: "",
-        })
 
         setText("");
     }
@@ -139,6 +114,26 @@ const Chat = () => {
         });
     };
 
+    const handleSendImg = async (img) => {
+        console.log(img);
+        if (!img.file) return;
+        let imgUrl = "";
+        try {
+            imgUrl = await upload(img.file, "images");
+            await updateDoc(doc(db, "chats", chatId), {
+                messages: arrayUnion({
+                    senderId: currentUser.id,
+                    text,
+                    createdAt: new Date(),
+                    ...(imgUrl && {img: imgUrl}),
+                })
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
+    };
+
     return (
         <div className="chat">
             <div className="top">
@@ -174,13 +169,9 @@ const Chat = () => {
             </div>
             <div className="button">
                 <div className="icons">
-                    <label htmlFor="file" className={isDisabled ? 'disabled' : ''}>
-                        <img src="./img.png" alt=""/>
-                    </label>
-                    <input type="file" id="file" style={{display: "none"}} onChange={handleImg}
-                           disabled={isCurrentBlocked || isReceiverBlocked}/>
-                    <PhotoCapture onSendPhoto={handleSendPhoto} disabled={isDisabled}/>
-                    <AudioRecorder onSendAudio={handleSendAudio} disabled={isDisabled}/>
+                    <ImageSender onSendImage={handleSendImg} isDisabled={isDisabled}/>
+                    <PhotoCapture onSendPhoto={handleSendPhoto} isDisabled={isDisabled}/>
+                    <AudioRecorder onSendAudio={handleSendAudio} isDisabled={isDisabled}/>
                 </div>
                 <input type="text" placeholder="Type something..." onChange={e => setText(e.target.value)} value={text}
                        disabled={isDisabled}/>
