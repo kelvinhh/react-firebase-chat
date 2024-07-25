@@ -37,9 +37,8 @@ const PhotoCapture = ({onSendPhoto, isDisabled}) => {
     };
 
     return (
-        // ToDo: isDisabled
         <div className="photocapture">
-            <button onClick={handleClick} disabled={true}>
+            <button onClick={handleClick} disabled={isDisabled}>
                 <img src="./camera.png" alt="Camera"/>
             </button>
             {isCapturing && <video ref={videoRef} style={{display: 'none'}}/>}
