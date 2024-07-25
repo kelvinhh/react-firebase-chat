@@ -1,3 +1,7 @@
+.chatList::-webkit-scrollbar {
+    display: none;
+}
+
 .chatList {
     flex: 1;
     overflow: scroll;
